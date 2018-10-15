@@ -37,7 +37,7 @@ public class AirplaneModelService {
 
     public void updateAirplaneModel(long producerId, long id, AirplaneModel updateAirplaneModel) {
         Producer producer;
-        if (updateAirplaneModel.getProducer() == null) producer = producerRepository.getOne(producerId);
+        if (updateAirplaneModel.getProducer() == null) producer = producerRepository.findById(producerId).get();
         else producer = updateAirplaneModel.getProducer();
 
         airplaneModelRepository.findById(id).map(airplaneModel -> {
