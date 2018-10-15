@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Producent {
+public class Producer {
 	@Id
 	@GeneratedValue
 	private long id;
@@ -18,11 +18,11 @@ public class Producent {
 	private List<AirplaneModel> models = new ArrayList<>();
 	private String owner;
 	
-	public Producent() {
+	public Producer() {
 		
 	}
 	
-	public Producent(String name, String owner) {
+	public Producer(String name, String owner) {
 		this.name = name;
 		this.owner = owner;
 	}
