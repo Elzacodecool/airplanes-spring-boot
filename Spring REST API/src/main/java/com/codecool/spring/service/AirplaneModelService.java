@@ -47,4 +47,8 @@ public class AirplaneModelService {
             return airplaneModelRepository.save(airplaneModel);
         });
     }
+
+    public void deleteAirplaneModel(long id) {
+        airplaneModelRepository.deleteById(id);
+    }
 }
