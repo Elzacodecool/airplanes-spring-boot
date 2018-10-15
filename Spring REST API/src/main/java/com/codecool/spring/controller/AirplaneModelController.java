@@ -32,4 +32,9 @@ public class AirplaneModelController {
     public void updateAirplaneModel(@RequestBody AirplaneModel airplaneModel, @PathVariable long producerId, @PathVariable long id) {
         airplaneModelService.updateAirplaneModel(producerId, id, airplaneModel);
     }
+
+    @DeleteMapping("/producers/{producerId}/airplanes/{id}")
+    public void deleteAirplaneModel(@PathVariable long id) {
+        airplaneModelService.deleteAirplaneModel(id);
+    }
 }
