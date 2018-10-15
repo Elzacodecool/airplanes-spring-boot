@@ -34,4 +34,17 @@ public class AirplaneModelService {
         airplaneModel.setProducer(producer);
         airplaneModelRepository.save(airplaneModel);
     }
+
+    public void updateAirplaneModel(long producerId, long id, AirplaneModel updateAirplaneModel) {
+        Producer producer;
+        if (updateAirplaneModel.getProducer() == null) producer = producerRepository.getOne(producerId);
+        else producer = updateAirplaneModel.getProducer();
+
+        airplaneModelRepository.findById(id).map(airplaneModel -> {
+            airplaneModel.setModelName(updateAirplaneModel.getModelName());
+            airplaneModel.setMaxSeat(updateAirplaneModel.getMaxSeat());
+            airplaneModel.setProducer(producer);
+            return airplaneModelRepository.save(airplaneModel);
+        });
+    }
 }
