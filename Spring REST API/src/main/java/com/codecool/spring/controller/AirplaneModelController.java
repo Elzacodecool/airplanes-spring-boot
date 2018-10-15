@@ -27,4 +27,9 @@ public class AirplaneModelController {
     public void addAirplaneModel(@RequestBody AirplaneModel airplaneModel, @PathVariable long producerId) {
         airplaneModelService.addAirplaneModel(producerId, airplaneModel);
     }
+
+    @PutMapping("/producers/{producerId}/airplanes/{id}")
+    public void updateAirplaneModel(@RequestBody AirplaneModel airplaneModel, @PathVariable long producerId, @PathVariable long id) {
+        airplaneModelService.updateAirplaneModel(producerId, id, airplaneModel);
+    }
 }
