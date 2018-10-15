@@ -3,9 +3,7 @@ package com.codecool.spring.controller;
 import com.codecool.spring.model.AirplaneModel;
 import com.codecool.spring.service.AirplaneModelService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,5 +21,10 @@ public class AirplaneModelController {
     @GetMapping("/producers/{producerId}/airplanes/{id}")
     public AirplaneModel getAirplaneModel(@PathVariable long id) {
         return airplaneModelService.getAirplaneModel(id);
+    }
+
+    @PostMapping("/producers/{producerId}/airplanes")
+    public void addAirplaneModel(@RequestBody AirplaneModel airplaneModel, @PathVariable long producerId) {
+        airplaneModelService.addAirplaneModel(producerId, airplaneModel);
     }
 }
