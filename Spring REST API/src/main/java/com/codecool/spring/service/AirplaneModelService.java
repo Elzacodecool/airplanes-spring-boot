@@ -23,4 +23,8 @@ public class AirplaneModelService {
         airplaneModelRepository.findByProducerId(producerId).forEach(models::add);
         return models;
     }
+
+    public AirplaneModel getAirplaneModel(long id) {
+        return airplaneModelRepository.findById(id).get();
+    }
 }
