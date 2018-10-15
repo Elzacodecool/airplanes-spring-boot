@@ -19,4 +19,9 @@ public class AirplaneModelController {
     public List<AirplaneModel> getAllAirplaneModels(@PathVariable long id) {
         return airplaneModelService.getAllAirplaneModels(id);
     }
+
+    @GetMapping("/producers/{producerId}/airplanes/{id}")
+    public AirplaneModel getAirplaneModel(@PathVariable long id) {
+        return airplaneModelService.getAirplaneModel(id);
+    }
 }
