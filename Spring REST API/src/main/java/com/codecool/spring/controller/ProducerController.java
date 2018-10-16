@@ -19,7 +19,7 @@ public class ProducerController {
 	
 	@Autowired
 	private ProducerService producerService;
-	
+
 	@GetMapping("/producers")
 	public List<Producer> getAllProducers() {
 		return producerService.getAllProducers();
