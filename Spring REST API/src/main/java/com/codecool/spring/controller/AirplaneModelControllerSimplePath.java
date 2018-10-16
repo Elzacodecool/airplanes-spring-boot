@@ -18,4 +18,9 @@ public class AirplaneModelControllerSimplePath {
         return airplaneModelService.getAllAirplaneModels();
     }
 
+    @GetMapping("/airplanes/{id}")
+    public AirplaneModel getAirplaneModel(@PathVariable long id) {
+        return airplaneModelService.getAirplaneModel(id);
+    }
+
 }
