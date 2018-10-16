@@ -14,7 +14,7 @@ public class Producer {
 	@GeneratedValue
 	private long id;
 	private String name;
-	@OneToMany
+	@OneToMany(mappedBy="producer")
 	private List<AirplaneModel> models = new ArrayList<>();
 	private String owner;
 	
@@ -22,8 +22,9 @@ public class Producer {
 		
 	}
 	
-	public Producer(String name, String owner) {
+	public Producer(String name, List<AirplaneModel> models, String owner) {
 		this.name = name;
+		this.models = models;
 		this.owner = owner;
 	}
 	
