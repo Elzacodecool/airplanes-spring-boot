@@ -23,4 +23,9 @@ public class AirplaneModelControllerSimplePath {
         return airplaneModelService.getAirplaneModel(id);
     }
 
+    @PostMapping("/airplanes")
+    public void addAirplaneModel(@RequestBody String airplaneModel) {
+        airplaneModelService.addAirplaneModel(airplaneModel);
+    }
+
 }
