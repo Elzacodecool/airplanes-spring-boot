@@ -33,4 +33,8 @@ public class AirplaneModelControllerSimplePath {
         airplaneModelService.updateAirplaneModel(id, airplaneModel);
     }
 
+    @DeleteMapping("/airplanes/{id}")
+    public void deleteAirplaneModel(@PathVariable long id) {
+        airplaneModelService.deleteAirplaneModel(id);
+    }
 }
