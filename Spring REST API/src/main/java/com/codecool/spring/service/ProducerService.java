@@ -14,10 +14,6 @@ public class ProducerService {
 	@Autowired
 	private ProducerRepository producerRepository;
 	
-	public ProducerService(ProducerRepository pr) {
-		this.producerRepository = pr;
-	}
-	
 	public List<Producer> getAllProducers() {
 		return (List<Producer>) producerRepository.findAll();
 	}
@@ -35,6 +31,10 @@ public class ProducerService {
 		currnetProducer.setName(producerDetails.getName());
 		currnetProducer.setOwner(producerDetails.getOwner());
 		producerRepository.save(currnetProducer);
+	}
+	
+	public void deleteProducer(long id) {
+		producerRepository.deleteById(id);
 	}
 	
 }
