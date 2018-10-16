@@ -40,6 +40,17 @@ public class AirplaneModelService {
         return airplaneModelRepository.findById(id).get();
     }
 
+    public void addAirplaneModel(String airplaneModelJSON) {
+        JSONObject jsonObject = new JSONObject(airplaneModelJSON);
+        Producer producer = producerRepository.findById(jsonObject.getLong("producer")).get();
+
+        AirplaneModel airplaneModel = new AirplaneModel(jsonObject.getString("modelName"),
+                jsonObject.getInt("maxSeat"));
+
+        airplaneModel.setProducer(producer);
+        airplaneModelRepository.save(airplaneModel);
+    }
+
     public void addAirplaneModel(long producerId, AirplaneModel airplaneModel) {
         Producer producer = producerRepository.findById(producerId).get();
         airplaneModel.setProducer(producer);
