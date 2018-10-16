@@ -2,6 +2,10 @@ package com.codecool.spring.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name = "airplane_models")
 public class AirplaneModel {
@@ -16,6 +20,8 @@ public class AirplaneModel {
 	private int maxSeat;
 
 	@ManyToOne
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+	@JsonIdentityReference(alwaysAsId = true)
 	private Producer producer;
 
 	public AirplaneModel() {
