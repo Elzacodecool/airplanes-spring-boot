@@ -24,6 +24,12 @@ public class AirplaneModelService {
     @Autowired
     private ProducerRepository producerRepository;
 
+    public List<AirplaneModel> getAllAirplaneModels() {
+        List<AirplaneModel> models = new ArrayList<>();
+        airplaneModelRepository.findAll().forEach(models::add);
+        return models;
+    }
+
     public List<AirplaneModel> getAllAirplaneModels(long producerId) {
         List<AirplaneModel> models = new ArrayList<>();
         airplaneModelRepository.findByProducerId(producerId).forEach(models::add);
