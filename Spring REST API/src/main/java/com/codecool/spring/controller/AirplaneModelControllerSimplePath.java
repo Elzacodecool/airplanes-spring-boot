@@ -28,4 +28,9 @@ public class AirplaneModelControllerSimplePath {
         airplaneModelService.addAirplaneModel(airplaneModel);
     }
 
+    @PutMapping("/airplanes/{id}")
+    public void updateAirplaneModel(@PathVariable long id, @RequestBody String airplaneModel) {
+        airplaneModelService.updateAirplaneModel(id, airplaneModel);
+    }
+
 }
