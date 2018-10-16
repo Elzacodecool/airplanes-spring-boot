@@ -13,4 +13,9 @@ public class AirplaneModelControllerSimplePath {
     @Autowired
     private AirplaneModelService airplaneModelService;
 
+    @GetMapping("/airplanes")
+    public List<AirplaneModel> getAllAirplaneModels() {
+        return airplaneModelService.getAllAirplaneModels();
+    }
+
 }
