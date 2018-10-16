@@ -70,6 +70,19 @@ public class AirplaneModelService {
         });
     }
 
+    public void updateAirplaneModel(long id, String airplaneModel) {
+        JSONObject jsonObject = new JSONObject(airplaneModel);
+        Producer producer =  producerRepository.findById(jsonObject.getLong("producer")).get();
+
+        AirplaneModel updatedModel = airplaneModelRepository.findById(id).get();
+
+        updatedModel.setModelName(jsonObject.getString("modelName"));
+        updatedModel.setMaxSeat(jsonObject.getInt("maxSeat"));
+        updatedModel.setProducer(producer);
+
+        airplaneModelRepository.save(updatedModel);
+    }
+
     public void deleteAirplaneModel(long id) {
         airplaneModelRepository.deleteById(id);
     }
