@@ -91,5 +91,6 @@ public class AirplaneModelService {
     	AirplaneModel airplaneModel = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
     	airplaneModel.setArchived(true);
     	airplaneModelRepository.save(airplaneModel);
+        LOGGER.info("Delete airplane model");
     }
 }
