@@ -61,8 +61,4 @@ public class Producer {
 	public void setArchived(boolean isArchived) {
 		this.isArchived = isArchived;
 	}	
-	
-	public void deleteAirplaneModel(AirplaneModel arirplaneModel) {
-		this.models.remove(arirplaneModel);
-	}
 }

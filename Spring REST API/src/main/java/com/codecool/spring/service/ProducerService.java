@@ -32,7 +32,15 @@ public class ProducerService {
 	}
 	
 	public Producer getProducer(long id) {
-		return producerRepository.findByIdAndIsArchivedIsFalse(id);
+		Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(id);
+		List<AirplaneModel> models = new ArrayList<>();
+		for(AirplaneModel airplaneModel: producer.getModels()) {
+			if(!airplaneModel.isArchived()) {
+				models.add(airplaneModel);
+			}
+		}
+		producer.setModels(models);
+		return producer;
 	}
 	
 	public void add(Producer producer) {
