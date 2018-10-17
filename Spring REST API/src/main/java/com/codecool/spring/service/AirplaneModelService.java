@@ -35,6 +35,7 @@ public class AirplaneModelService {
     }
 
     public AirplaneModel getAirplaneModel(long id) {
+        LOGGER.info("Get airplane model by: " + id);
         return airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
     }
 
