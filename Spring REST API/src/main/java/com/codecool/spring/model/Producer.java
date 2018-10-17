@@ -18,15 +18,17 @@ public class Producer {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy="producer")
 	private List<AirplaneModel> models = new ArrayList<>();
 	private String owner;
+	private boolean isArchived;
 	
 	public Producer() {
 		
 	}
 	
-	public Producer(String name, List<AirplaneModel> models, String owner) {
+	public Producer(String name, List<AirplaneModel> models, String owner, boolean isArchived) {
 		this.name = name;
 		this.models = models;
 		this.owner = owner;
+		this.isArchived = isArchived;
 	}
 	
 	public long getId() {
@@ -51,5 +53,12 @@ public class Producer {
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
-		
+
+	public boolean isArchived() {
+		return isArchived;
+	}
+
+	public void setArchived(boolean isArchived) {
+		this.isArchived = isArchived;
+	}		
 }

@@ -15,11 +15,11 @@ public class ProducerService {
 	private ProducerRepository producerRepository;
 	
 	public List<Producer> getAllProducers() {
-		return (List<Producer>) producerRepository.findAll();
+		return (List<Producer>) producerRepository.findAllByIsArchived(false);
 	}
 	
 	public Producer getProducer(long id) {
-		return producerRepository.findById(id).get();
+		return producerRepository.findByIdAndIsArchived(id, false);
 	}
 	
 	public void add(Producer producer) {
@@ -34,7 +34,9 @@ public class ProducerService {
 	}
 	
 	public void deleteProducer(long id) {
-		producerRepository.deleteById(id);
+		Producer producer = producerRepository.findByIdAndIsArchived(id, false);
+		producer.setArchived(true);
+		producerRepository.save(producer);
 	}
 	
 }
