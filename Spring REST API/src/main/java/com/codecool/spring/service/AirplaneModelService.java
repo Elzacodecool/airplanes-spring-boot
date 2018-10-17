@@ -25,10 +25,12 @@ public class AirplaneModelService {
     private ProducerRepository producerRepository;
 
     public List<AirplaneModel> getAllAirplaneModels() {
+        LOGGER.info("Get all airplane models");
         return airplaneModelRepository.findAllByIsArchivedIsFalse();
     }
 
     public List<AirplaneModel> getAllAirplaneModels(long producerId) {
+        LOGGER.info("Get all airplane models by producer id: " + producerId);
         return airplaneModelRepository.findAllByProducerIdAndIsArchivedIsFalse(producerId);
     }
 
