@@ -70,6 +70,7 @@ public class AirplaneModelService {
         airplaneModel.setProducer(producer);
         
         airplaneModelRepository.save(airplaneModel);
+        LOGGER.info("Update airplane model");
     }
 
     public void updateAirplaneModel(long id, String airplaneModel) {
@@ -83,6 +84,7 @@ public class AirplaneModelService {
         updatedModel.setProducer(producer);
 
         airplaneModelRepository.save(updatedModel);
+        LOGGER.info("Update airplane model");
     }
 
     public void deleteAirplaneModel(long id) {
