@@ -48,12 +48,14 @@ public class AirplaneModelService {
 
         airplaneModel.setProducer(producer);
         airplaneModelRepository.save(airplaneModel);
+        LOGGER.info("Add airplane model");
     }
 
     public void addAirplaneModel(long producerId, AirplaneModel airplaneModel) {
         Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(producerId);
         airplaneModel.setProducer(producer);
         airplaneModelRepository.save(airplaneModel);
+        LOGGER.info("Add airplane model");
     }
 
     public void updateAirplaneModel(long producerId, long id, AirplaneModel updateAirplaneModel) {
