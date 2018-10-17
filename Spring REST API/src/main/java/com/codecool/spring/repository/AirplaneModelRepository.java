@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface AirplaneModelRepository extends JpaRepository<AirplaneModel, Long> {
-
-    public List<AirplaneModel> findByProducerId(long id);
+	List<AirplaneModel> findAllByIsArchivedIsFalse();
+	AirplaneModel findByIdAndIsArchivedIsFalse(long id);
+    List<AirplaneModel> findAllByProducerIdAndIsArchivedIsFalse(long id);
 }

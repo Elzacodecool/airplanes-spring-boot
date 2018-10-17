@@ -19,10 +19,12 @@ public class AirplaneModel {
 	@Column(name = "maxSeat")
 	private int maxSeat;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private Producer producer;
+	
+	private boolean isArchived;
 
 	public AirplaneModel() {
 	}
@@ -55,6 +57,14 @@ public class AirplaneModel {
 
 	public void setMaxSeat(int maxSeat) {
 		this.maxSeat = maxSeat;
+	}
+
+	public boolean isArchived() {
+		return isArchived;
+	}
+
+	public void setArchived(boolean isArchived) {
+		this.isArchived = isArchived;
 	}
 
 	public long getId() {

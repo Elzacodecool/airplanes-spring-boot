@@ -25,24 +25,20 @@ public class AirplaneModelService {
     private ProducerRepository producerRepository;
 
     public List<AirplaneModel> getAllAirplaneModels() {
-        List<AirplaneModel> models = new ArrayList<>();
-        airplaneModelRepository.findAll().forEach(models::add);
-        return models;
+        return airplaneModelRepository.findAllByIsArchivedIsFalse();
     }
 
     public List<AirplaneModel> getAllAirplaneModels(long producerId) {
-        List<AirplaneModel> models = new ArrayList<>();
-        airplaneModelRepository.findByProducerId(producerId).forEach(models::add);
-        return models;
+        return airplaneModelRepository.findAllByProducerIdAndIsArchivedIsFalse(producerId);
     }
 
     public AirplaneModel getAirplaneModel(long id) {
-        return airplaneModelRepository.findById(id).get();
+        return airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
     }
 
     public void addAirplaneModel(String airplaneModelJSON) {
         JSONObject jsonObject = new JSONObject(airplaneModelJSON);
-        Producer producer = producerRepository.findById(jsonObject.getLong("producer")).get();
+        Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(jsonObject.getLong("producer"));
 
         AirplaneModel airplaneModel = new AirplaneModel(jsonObject.getString("modelName"),
                 jsonObject.getInt("maxSeat"));
@@ -52,29 +48,30 @@ public class AirplaneModelService {
     }
 
     public void addAirplaneModel(long producerId, AirplaneModel airplaneModel) {
-        Producer producer = producerRepository.findById(producerId).get();
+        Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(producerId);
         airplaneModel.setProducer(producer);
         airplaneModelRepository.save(airplaneModel);
     }
 
     public void updateAirplaneModel(long producerId, long id, AirplaneModel updateAirplaneModel) {
         Producer producer;
-        if (updateAirplaneModel.getProducer() == null) producer = producerRepository.findById(producerId).get();
+        if (updateAirplaneModel.getProducer() == null) producer = producerRepository.findByIdAndIsArchivedIsFalse(producerId);
         else producer = updateAirplaneModel.getProducer();
 
-        airplaneModelRepository.findById(id).map(airplaneModel -> {
-            airplaneModel.setModelName(updateAirplaneModel.getModelName());
-            airplaneModel.setMaxSeat(updateAirplaneModel.getMaxSeat());
-            airplaneModel.setProducer(producer);
-            return airplaneModelRepository.save(airplaneModel);
-        });
+        AirplaneModel airplaneModel = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
+        
+        airplaneModel.setModelName(updateAirplaneModel.getModelName());
+        airplaneModel.setMaxSeat(updateAirplaneModel.getMaxSeat());
+        airplaneModel.setProducer(producer);
+        
+        airplaneModelRepository.save(airplaneModel);
     }
 
     public void updateAirplaneModel(long id, String airplaneModel) {
         JSONObject jsonObject = new JSONObject(airplaneModel);
-        Producer producer =  producerRepository.findById(jsonObject.getLong("producer")).get();
+        Producer producer =  producerRepository.findByIdAndIsArchivedIsFalse(jsonObject.getLong("producer"));
 
-        AirplaneModel updatedModel = airplaneModelRepository.findById(id).get();
+        AirplaneModel updatedModel = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
 
         updatedModel.setModelName(jsonObject.getString("modelName"));
         updatedModel.setMaxSeat(jsonObject.getInt("maxSeat"));
@@ -84,6 +81,8 @@ public class AirplaneModelService {
     }
 
     public void deleteAirplaneModel(long id) {
-        airplaneModelRepository.deleteById(id);
+    	AirplaneModel airplaneModel = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
+    	airplaneModel.setArchived(true);
+    	airplaneModelRepository.save(airplaneModel);
     }
 }

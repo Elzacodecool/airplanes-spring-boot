@@ -8,6 +8,6 @@ import com.codecool.spring.model.Producer;
 
 @Repository
 public interface ProducerRepository extends CrudRepository<Producer, Long> {
-	List<Producer> findAllByIsArchived(boolean isArchived);
-	Producer findByIdAndIsArchived(long id, boolean isArchived);
+	List<Producer> findAllByIsArchivedIsFalse();
+	Producer findByIdAndIsArchivedIsFalse(long id);
 }
