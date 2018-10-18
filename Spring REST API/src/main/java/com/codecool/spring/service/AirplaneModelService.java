@@ -122,10 +122,14 @@ public class AirplaneModelService {
         }
     }
 
-    public void deleteAirplaneModel(long id) {
+    public void deleteAirplaneModel(long id) throws AirplaneModelWrongDataException {
     	AirplaneModel airplaneModel = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
+    	if (airplaneModel == null) {
+            LOGGER.info("Failed to delete airplane model with id: " + id);
+            throw new AirplaneModelWrongDataException("Failed to delete airplane model with id: " + id);
+        }
     	airplaneModel.setArchived(true);
     	airplaneModelRepository.save(airplaneModel);
-        LOGGER.info("Delete airplane model");
+        LOGGER.info("Delete airplane model with id: " + id);
     }
 }
