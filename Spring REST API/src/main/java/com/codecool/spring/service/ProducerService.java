@@ -41,19 +41,26 @@ public class ProducerService {
         }
 	}
 	
-	public Producer getProducer(long id) {
-		Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(id);
-		if (producer == null) {
-			throw new ProducerNotFoundException(id);
-		}
-		List<AirplaneModel> models = new ArrayList<>();
-		for(AirplaneModel airplaneModel: producer.getModels()) {
-			if(!airplaneModel.isArchived()) {
-				models.add(airplaneModel);
-			}
-		}
-		producer.setModels(models);
-		return producer;
+	public Producer getProducer(long id) throws ProducerNotFoundException,
+            JDBCConnectionException {
+
+	    try {
+            Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(id);
+            if (producer == null) {
+                throw new ProducerNotFoundException(id);
+            }
+            List<AirplaneModel> models = new ArrayList<>();
+            for(AirplaneModel airplaneModel: producer.getModels()) {
+                if(!airplaneModel.isArchived()) {
+                    models.add(airplaneModel);
+                }
+            }
+            producer.setModels(models);
+            return producer;
+        }
+        catch (DataAccessResourceFailureException e) {
+            throw new JDBCConnectionException("Connection to database failed", new SQLException());
+        }
 	}
 	
 	public void add(Producer producer) {
