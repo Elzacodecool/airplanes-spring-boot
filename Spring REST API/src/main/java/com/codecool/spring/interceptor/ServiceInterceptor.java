@@ -52,11 +52,11 @@ public class ServiceInterceptor implements HandlerInterceptor {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
 
-        if (response.getStatus() >= 400) {
+        if (response.getStatus() != 500) LOGGER.info("[afterCompletion] " + method.getName() + " is completed");
+        else {
             LOGGER.info("[afterCompletion] Can't " + method.getName()
                     + ", object not found [error status: " + response.getStatus() + "]");
-        } else {
-            LOGGER.info("[afterCompletion] " + method.getName() + " is completed");
+            sendEmail(response, method);
         }
     }
 
