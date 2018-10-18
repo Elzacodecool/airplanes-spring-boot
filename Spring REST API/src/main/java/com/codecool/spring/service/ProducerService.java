@@ -1,11 +1,14 @@
 package com.codecool.spring.service;
 
 import java.security.InvalidParameterException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.codecool.spring.exception.ProducerNotFoundException;
+import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Service;
 
 import com.codecool.spring.model.AirplaneModel;
@@ -18,19 +21,24 @@ public class ProducerService {
 	@Autowired
 	private ProducerRepository producerRepository;
 	
-	public List<Producer> getAllProducers() {
-		List<Producer> producers = producerRepository.findAllByIsArchivedIsFalse();
-		for (Producer producer: producers) {
-			List<AirplaneModel> models = new ArrayList<>();
-			for(AirplaneModel airplaneModel: producer.getModels()) {
-				if(!airplaneModel.isArchived()) {
-					models.add(airplaneModel);
-				}
-			}
-			producer.setModels(models);
-		}
-		
-		return producers;
+	public List<Producer> getAllProducers() throws JDBCConnectionException {
+	    try {
+            List<Producer> producers = producerRepository.findAllByIsArchivedIsFalse();
+            for (Producer producer: producers) {
+                List<AirplaneModel> models = new ArrayList<>();
+                for(AirplaneModel airplaneModel: producer.getModels()) {
+                    if(!airplaneModel.isArchived()) {
+                        models.add(airplaneModel);
+                    }
+                }
+                producer.setModels(models);
+            }
+
+            return producers;
+        }
+        catch (DataAccessResourceFailureException e) {
+            throw new JDBCConnectionException("Connection to database failed", new SQLException());
+        }
 	}
 	
 	public Producer getProducer(long id) {
