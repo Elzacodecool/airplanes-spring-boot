@@ -50,20 +50,32 @@ public class AirplaneModelService {
         return output;
     }
 
-    public void addAirplaneModel(String airplaneModelJSON) {
-        JSONObject jsonObject = new JSONObject(airplaneModelJSON);
-        Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(jsonObject.getLong("producer"));
+    public void addAirplaneModel(String airplaneModelJSON) throws AirplaneModelWrongDataException {
+        try {
+            JSONObject jsonObject = new JSONObject(airplaneModelJSON);
+            Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(jsonObject.getLong("producer"));
+            AirplaneModel airplaneModel = new AirplaneModel(jsonObject.getString("modelName"),
+                    jsonObject.getInt("maxSeat"));
 
-        AirplaneModel airplaneModel = new AirplaneModel(jsonObject.getString("modelName"),
-                jsonObject.getInt("maxSeat"));
+            airplaneModel.setProducer(producer);
+            airplaneModelRepository.save(airplaneModel);
+            LOGGER.info("Add airplane model");
+        }
+        catch (JSONException e) {
+            LOGGER.info("Failed to add airplane model");
+            throw new AirplaneModelWrongDataException("Failed to add airplane model");
+        }
 
-        airplaneModel.setProducer(producer);
-        airplaneModelRepository.save(airplaneModel);
-        LOGGER.info("Add airplane model");
     }
 
-    public void addAirplaneModel(long producerId, AirplaneModel airplaneModel) {
+    public void addAirplaneModel(long producerId, AirplaneModel airplaneModel)
+            throws AirplaneModelWrongDataException {
         Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(producerId);
+        if (producer == null) {
+            LOGGER.info("Failed to add airplane model");
+            throw new AirplaneModelWrongDataException("Failed to add airplane model. " +
+                    "Wrong producer id: " + producerId);
+        }
         airplaneModel.setProducer(producer);
         airplaneModelRepository.save(airplaneModel);
         LOGGER.info("Add airplane model");
