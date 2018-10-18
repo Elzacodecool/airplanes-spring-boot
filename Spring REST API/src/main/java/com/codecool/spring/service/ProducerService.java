@@ -36,7 +36,7 @@ public class ProducerService {
 	public Producer getProducer(long id) {
 		Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(id);
 		if (producer == null) {
-			throw new ProducerNotFoundException();
+			throw new ProducerNotFoundException(id);
 		}
 		List<AirplaneModel> models = new ArrayList<>();
 		for(AirplaneModel airplaneModel: producer.getModels()) {
@@ -55,7 +55,7 @@ public class ProducerService {
 	public void update(long id, Producer producerDetails) {
 		Producer currnetProducer = producerRepository.findByIdAndIsArchivedIsFalse(id);
 		if (currnetProducer == null) {
-		    throw new ProducerNotFoundException();
+		    throw new ProducerNotFoundException(id);
         }
 		currnetProducer.setName(producerDetails.getName());
 		currnetProducer.setOwner(producerDetails.getOwner());
@@ -65,7 +65,7 @@ public class ProducerService {
 	public void deleteProducer(long id) {
 		Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(id);
 		if (producer == null) {
-		    throw new ProducerNotFoundException();
+		    throw new ProducerNotFoundException(id);
         }
 		producer.setArchived(true);
 		for(AirplaneModel airplaneModel : producer.getModels()) {
