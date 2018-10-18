@@ -1,6 +1,7 @@
 package com.codecool.spring.controller;
 
 import com.codecool.spring.exception.AirplaneModelNotFoundException;
+import com.codecool.spring.exception.AirplaneModelWrongDataException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +14,15 @@ import java.sql.Timestamp;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({AirplaneModelNotFoundException.class})
+    @ExceptionHandler({AirplaneModelNotFoundException.class, AirplaneModelWrongDataException.class})
     public final ResponseEntity<ErrorMessage> handleExceptions(Exception ex, HttpServletRequest request) {
 
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        if (ex instanceof AirplaneModelNotFoundException) status = HttpStatus.NOT_FOUND;
+        if (ex instanceof AirplaneModelWrongDataException) status = HttpStatus.BAD_REQUEST;
+
         HttpHeaders headers = new HttpHeaders();
-        HttpStatus status = HttpStatus.NOT_FOUND;
         ErrorMessage errorMessageResponse = new ErrorMessage(new Timestamp(System.currentTimeMillis()), status.toString(),
                 ex.getMessage(), request.getRequestURL().toString());
         return new ResponseEntity<>(errorMessageResponse, headers, status);
