@@ -6,13 +6,14 @@ import com.codecool.spring.model.AirplaneModel;
 import com.codecool.spring.model.Producer;
 import com.codecool.spring.repository.AirplaneModelRepository;
 import com.codecool.spring.repository.ProducerRepository;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.hibernate.exception.JDBCConnectionException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -24,19 +25,29 @@ public class AirplaneModelService {
     @Autowired
     private ProducerRepository producerRepository;
 
-    public List<AirplaneModel> getAllAirplaneModels() throws AirplaneModelNotFoundException {
-        List<AirplaneModel> output = airplaneModelRepository.findAllByIsArchivedIsFalse();
-        if (!output.isEmpty()) return output;
-        else {
+    public List<AirplaneModel> getAllAirplaneModels() throws AirplaneModelNotFoundException,
+            JDBCConnectionException {
+
+        try {
+            List<AirplaneModel> output = airplaneModelRepository.findAllByIsArchivedIsFalse();
+            if (!output.isEmpty()) return output;
             throw new AirplaneModelNotFoundException("No airplane models in database");
+        }
+        catch (DataAccessResourceFailureException e) {
+            throw new JDBCConnectionException("Connection to database failed", new SQLException());
         }
     }
 
-    public List<AirplaneModel> getAllAirplaneModels(long producerId) throws AirplaneModelNotFoundException {
-        List<AirplaneModel> output = airplaneModelRepository.findAllByProducerIdAndIsArchivedIsFalse(producerId);
-        if (!output.isEmpty()) return output;
-        else {
+    public List<AirplaneModel> getAllAirplaneModels(long producerId) throws AirplaneModelNotFoundException,
+            JDBCConnectionException {
+
+        try {
+            List<AirplaneModel> output = airplaneModelRepository.findAllByProducerIdAndIsArchivedIsFalse(producerId);
+            if (!output.isEmpty()) return output;
             throw new AirplaneModelNotFoundException("No airplane models for producer with id: " + producerId);
+        }
+        catch (DataAccessResourceFailureException e) {
+            throw new JDBCConnectionException("Connection to database failed", new SQLException());
         }
     }
 
