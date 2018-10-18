@@ -89,17 +89,22 @@ public class ProducerService {
         }
 	}
 	
-	public void deleteProducer(long id) {
-		Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(id);
-		if (producer == null) {
-		    throw new ProducerNotFoundException(id);
+	public void deleteProducer(long id) throws ProducerNotFoundException, JDBCConnectionException {
+	    try {
+            Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(id);
+            if (producer == null) {
+                throw new ProducerNotFoundException(id);
+            }
+            producer.setArchived(true);
+            for(AirplaneModel airplaneModel : producer.getModels()) {
+                airplaneModel.setArchived(true);
+                producer.getModels().remove(airplaneModel);
+            }
+            producerRepository.save(producer);
         }
-		producer.setArchived(true);
-		for(AirplaneModel airplaneModel : producer.getModels()) {
-			airplaneModel.setArchived(true);
-			producer.getModels().remove(airplaneModel);
-		}
-		producerRepository.save(producer);
+        catch (DataAccessResourceFailureException e) {
+            throw new JDBCConnectionException("Connection to database failed", new SQLException());
+        }
 	}
 	
 }
