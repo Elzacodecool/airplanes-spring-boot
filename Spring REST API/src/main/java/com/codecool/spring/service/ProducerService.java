@@ -53,13 +53,13 @@ public class ProducerService {
 	}
 
 	public void update(long id, Producer producerDetails) {
-		Producer currnetProducer = producerRepository.findByIdAndIsArchivedIsFalse(id);
-		if (currnetProducer == null) {
+		Producer currentProducer = producerRepository.findByIdAndIsArchivedIsFalse(id);
+		if (currentProducer == null) {
 		    throw new ProducerNotFoundException(id);
         }
-		currnetProducer.setName(producerDetails.getName());
-		currnetProducer.setOwner(producerDetails.getOwner());
-		producerRepository.save(currnetProducer);
+		currentProducer.setName(producerDetails.getName());
+		currentProducer.setOwner(producerDetails.getOwner());
+		producerRepository.save(currentProducer);
 	}
 	
 	public void deleteProducer(long id) {
