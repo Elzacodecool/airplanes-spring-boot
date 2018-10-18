@@ -63,8 +63,13 @@ public class ProducerService {
         }
 	}
 	
-	public void add(Producer producer) {
-		producerRepository.save(producer);
+	public void add(Producer producer) throws JDBCConnectionException {
+	    try {
+            producerRepository.save(producer);
+        }
+        catch (DataAccessResourceFailureException e) {
+            throw new JDBCConnectionException("Connection to database failed", new SQLException());
+        }
 	}
 
 	public void update(long id, Producer producerDetails) {
