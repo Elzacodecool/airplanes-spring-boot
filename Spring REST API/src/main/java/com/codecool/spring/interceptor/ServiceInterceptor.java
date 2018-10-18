@@ -1,7 +1,10 @@
 package com.codecool.spring.interceptor;
 
+import com.codecool.spring.model.Mail;
+import com.codecool.spring.service.EmailService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -13,7 +16,11 @@ import java.lang.reflect.Method;
 
 @Component
 public class ServiceInterceptor implements HandlerInterceptor {
+
     private static final Logger LOGGER = LogManager.getLogger(ServiceInterceptor.class.getName());
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public boolean preHandle(
@@ -51,5 +58,15 @@ public class ServiceInterceptor implements HandlerInterceptor {
         } else {
             LOGGER.info("[afterCompletion] " + method.getName() + " is completed");
         }
+    }
+
+    private void sendEmail(HttpServletResponse response, Method method) {
+        Mail mail = new Mail();
+        mail.setFrom("noreplyspring@wp.pl");
+        mail.setTo("noreplyspring@wp.pl");
+        mail.setSubject("Server Error");
+        mail.setContent("Error 500 occurred.\n" + "[afterCompletion] Can't " + method.getName()
+                + ", object not found [error status: " + response.getStatus() + "]");
+        emailService.sendSimpleMessage(mail);
     }
 }
