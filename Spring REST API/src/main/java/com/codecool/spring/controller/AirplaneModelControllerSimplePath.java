@@ -1,5 +1,6 @@
 package com.codecool.spring.controller;
 
+import com.codecool.spring.exception.AirplaneModelNotFoundException;
 import com.codecool.spring.model.AirplaneModel;
 import com.codecool.spring.service.AirplaneModelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ public class AirplaneModelControllerSimplePath {
     private AirplaneModelService airplaneModelService;
 
     @GetMapping("/airplanes")
-    public List<AirplaneModel> getAllAirplaneModels() {
+    public List<AirplaneModel> getAllAirplaneModels() throws AirplaneModelNotFoundException {
         return airplaneModelService.getAllAirplaneModels();
     }
 
