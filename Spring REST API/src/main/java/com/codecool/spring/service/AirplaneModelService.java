@@ -1,12 +1,14 @@
 package com.codecool.spring.service;
 
 import com.codecool.spring.exception.AirplaneModelNotFoundException;
+import com.codecool.spring.exception.AirplaneModelWrongDataException;
 import com.codecool.spring.model.AirplaneModel;
 import com.codecool.spring.model.Producer;
 import com.codecool.spring.repository.AirplaneModelRepository;
 import com.codecool.spring.repository.ProducerRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,9 +43,11 @@ public class AirplaneModelService {
         else throw new AirplaneModelNotFoundException("No airplane models for producer with id: " + producerId);
     }
 
-    public AirplaneModel getAirplaneModel(long id) {
+    public AirplaneModel getAirplaneModel(long id) throws AirplaneModelNotFoundException {
         LOGGER.info("Get airplane model by: " + id);
-        return airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
+        AirplaneModel output = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
+        if (output == null) throw new AirplaneModelNotFoundException("No airplane model for id: " + id);
+        return output;
     }
 
     public void addAirplaneModel(String airplaneModelJSON) {
