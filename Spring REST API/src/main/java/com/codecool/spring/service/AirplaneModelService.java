@@ -51,15 +51,22 @@ public class AirplaneModelService {
         }
     }
 
-    public AirplaneModel getAirplaneModel(long id) throws AirplaneModelNotFoundException {
-        AirplaneModel output = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
-        if (output == null) {
-            throw new AirplaneModelNotFoundException("No airplane model for id: " + id);
+    public AirplaneModel getAirplaneModel(long id) throws AirplaneModelNotFoundException,
+            JDBCConnectionException {
+
+        try {
+            AirplaneModel output = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
+            if (output == null) throw new AirplaneModelNotFoundException("No airplane model for id: " + id);
+            return output;
         }
-        return output;
+        catch (DataAccessResourceFailureException e) {
+            throw new JDBCConnectionException("Connection to database failed", new SQLException());
+        }
     }
 
-    public void addAirplaneModel(String airplaneModelJSON) throws AirplaneModelWrongDataException {
+    public void addAirplaneModel(String airplaneModelJSON) throws AirplaneModelWrongDataException,
+            JDBCConnectionException {
+
         try {
             JSONObject jsonObject = new JSONObject(airplaneModelJSON);
             Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(jsonObject.getLong("producer"));
@@ -72,18 +79,25 @@ public class AirplaneModelService {
         catch (JSONException e) {
             throw new AirplaneModelWrongDataException("Failed to add airplane model");
         }
-
+        catch (DataAccessResourceFailureException e) {
+            throw new JDBCConnectionException("Connection to database failed", new SQLException());
+        }
     }
 
     public void addAirplaneModel(long producerId, AirplaneModel airplaneModel)
-            throws AirplaneModelWrongDataException {
-        Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(producerId);
-        if (producer == null) {
-            throw new AirplaneModelWrongDataException("Failed to add airplane model. " +
-                    "Wrong producer id: " + producerId);
+            throws AirplaneModelWrongDataException, JDBCConnectionException {
+
+        try {
+            Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(producerId);
+            if (producer == null) throw new AirplaneModelWrongDataException("Failed to add airplane model. " +
+                        "Wrong producer id: " + producerId);
+
+            airplaneModel.setProducer(producer);
+            airplaneModelRepository.save(airplaneModel);
         }
-        airplaneModel.setProducer(producer);
-        airplaneModelRepository.save(airplaneModel);
+        catch (DataAccessResourceFailureException e) {
+            throw new JDBCConnectionException("Connection to database failed", new SQLException());
+        }
     }
 
     public void updateAirplaneModel(long producerId, long id, AirplaneModel updateAirplaneModel)
