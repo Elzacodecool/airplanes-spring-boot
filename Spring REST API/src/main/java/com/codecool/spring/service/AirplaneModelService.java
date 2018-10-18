@@ -81,10 +81,16 @@ public class AirplaneModelService {
         LOGGER.info("Add airplane model");
     }
 
-    public void updateAirplaneModel(long producerId, long id, AirplaneModel updateAirplaneModel) {
-        Producer producer;
-        if (updateAirplaneModel.getProducer() == null) producer = producerRepository.findByIdAndIsArchivedIsFalse(producerId);
-        else producer = updateAirplaneModel.getProducer();
+    public void updateAirplaneModel(long producerId, long id, AirplaneModel updateAirplaneModel)
+            throws AirplaneModelWrongDataException {
+
+        Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(producerId);
+
+        if (producer == null) {
+            LOGGER.info("Failed to update airplane model");
+            throw new AirplaneModelWrongDataException("Failed to update airplane model. " +
+                    "Wrong producer id: " + producerId);
+        }
 
         AirplaneModel airplaneModel = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
         
@@ -93,21 +99,27 @@ public class AirplaneModelService {
         airplaneModel.setProducer(producer);
         
         airplaneModelRepository.save(airplaneModel);
-        LOGGER.info("Update airplane model");
+        LOGGER.info("Update airplane model with id: " + id);
     }
 
-    public void updateAirplaneModel(long id, String airplaneModel) {
-        JSONObject jsonObject = new JSONObject(airplaneModel);
-        Producer producer =  producerRepository.findByIdAndIsArchivedIsFalse(jsonObject.getLong("producer"));
+    public void updateAirplaneModel(long id, String airplaneModel) throws AirplaneModelWrongDataException {
+        try {
+            JSONObject jsonObject = new JSONObject(airplaneModel);
+            Producer producer =  producerRepository.findByIdAndIsArchivedIsFalse(jsonObject.getLong("producer"));
 
-        AirplaneModel updatedModel = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
+            AirplaneModel updatedModel = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
 
-        updatedModel.setModelName(jsonObject.getString("modelName"));
-        updatedModel.setMaxSeat(jsonObject.getInt("maxSeat"));
-        updatedModel.setProducer(producer);
+            updatedModel.setModelName(jsonObject.getString("modelName"));
+            updatedModel.setMaxSeat(jsonObject.getInt("maxSeat"));
+            updatedModel.setProducer(producer);
 
-        airplaneModelRepository.save(updatedModel);
-        LOGGER.info("Update airplane model");
+            airplaneModelRepository.save(updatedModel);
+            LOGGER.info("Update airplane model with id: " + id);
+        }
+        catch (JSONException e) {
+            LOGGER.info("Failed to update airplane model with id: " + id);
+            throw new AirplaneModelWrongDataException("Failed to update airplane model with id: " + id);
+        }
     }
 
     public void deleteAirplaneModel(long id) {
