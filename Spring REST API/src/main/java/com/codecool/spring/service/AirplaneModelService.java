@@ -40,13 +40,19 @@ public class AirplaneModelService {
         LOGGER.info("Get all airplane models by producer id: " + producerId);
         List<AirplaneModel> output = airplaneModelRepository.findAllByProducerIdAndIsArchivedIsFalse(producerId);
         if (!output.isEmpty()) return output;
-        else throw new AirplaneModelNotFoundException("No airplane models for producer with id: " + producerId);
+        else {
+            LOGGER.error("Error on producers/" + producerId + "/airplanes path");
+            throw new AirplaneModelNotFoundException("No airplane models for producer with id: " + producerId);
+        }
     }
 
     public AirplaneModel getAirplaneModel(long id) throws AirplaneModelNotFoundException {
         LOGGER.info("Get airplane model by: " + id);
         AirplaneModel output = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
-        if (output == null) throw new AirplaneModelNotFoundException("No airplane model for id: " + id);
+        if (output == null) {
+            LOGGER.error("Error on /airplanes/" + id + " path");
+            throw new AirplaneModelNotFoundException("No airplane model for id: " + id);
+        }
         return output;
     }
 
@@ -62,7 +68,7 @@ public class AirplaneModelService {
             LOGGER.info("Add airplane model");
         }
         catch (JSONException e) {
-            LOGGER.info("Failed to add airplane model");
+            LOGGER.error("Failed to add airplane model");
             throw new AirplaneModelWrongDataException("Failed to add airplane model");
         }
 
@@ -72,7 +78,7 @@ public class AirplaneModelService {
             throws AirplaneModelWrongDataException {
         Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(producerId);
         if (producer == null) {
-            LOGGER.info("Failed to add airplane model");
+            LOGGER.error("Failed to add airplane model");
             throw new AirplaneModelWrongDataException("Failed to add airplane model. " +
                     "Wrong producer id: " + producerId);
         }
@@ -87,7 +93,7 @@ public class AirplaneModelService {
         Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(producerId);
 
         if (producer == null) {
-            LOGGER.info("Failed to update airplane model");
+            LOGGER.error("Failed to update airplane model");
             throw new AirplaneModelWrongDataException("Failed to update airplane model. " +
                     "Wrong producer id: " + producerId);
         }
@@ -117,7 +123,7 @@ public class AirplaneModelService {
             LOGGER.info("Update airplane model with id: " + id);
         }
         catch (JSONException e) {
-            LOGGER.info("Failed to update airplane model with id: " + id);
+            LOGGER.error("Failed to update airplane model with id: " + id);
             throw new AirplaneModelWrongDataException("Failed to update airplane model with id: " + id);
         }
     }
@@ -125,7 +131,7 @@ public class AirplaneModelService {
     public void deleteAirplaneModel(long id) throws AirplaneModelWrongDataException {
     	AirplaneModel airplaneModel = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
     	if (airplaneModel == null) {
-            LOGGER.info("Failed to delete airplane model with id: " + id);
+            LOGGER.error("Failed to delete airplane model with id: " + id);
             throw new AirplaneModelWrongDataException("Failed to delete airplane model with id: " + id);
         }
     	airplaneModel.setArchived(true);
