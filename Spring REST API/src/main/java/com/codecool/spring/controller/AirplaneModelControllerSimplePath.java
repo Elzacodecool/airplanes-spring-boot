@@ -1,6 +1,7 @@
 package com.codecool.spring.controller;
 
 import com.codecool.spring.exception.AirplaneModelNotFoundException;
+import com.codecool.spring.exception.AirplaneModelWrongDataException;
 import com.codecool.spring.model.AirplaneModel;
 import com.codecool.spring.service.AirplaneModelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,22 +21,23 @@ public class AirplaneModelControllerSimplePath {
     }
 
     @GetMapping("/airplanes/{id}")
-    public AirplaneModel getAirplaneModel(@PathVariable long id) {
+    public AirplaneModel getAirplaneModel(@PathVariable long id) throws AirplaneModelNotFoundException {
         return airplaneModelService.getAirplaneModel(id);
     }
 
     @PostMapping("/airplanes")
-    public void addAirplaneModel(@RequestBody String airplaneModel) {
+    public void addAirplaneModel(@RequestBody String airplaneModel) throws AirplaneModelWrongDataException {
         airplaneModelService.addAirplaneModel(airplaneModel);
     }
 
     @PutMapping("/airplanes/{id}")
-    public void updateAirplaneModel(@PathVariable long id, @RequestBody String airplaneModel) {
+    public void updateAirplaneModel(@PathVariable long id, @RequestBody String airplaneModel)
+            throws AirplaneModelWrongDataException {
         airplaneModelService.updateAirplaneModel(id, airplaneModel);
     }
 
     @DeleteMapping("/airplanes/{id}")
-    public void deleteAirplaneModel(@PathVariable long id) {
+    public void deleteAirplaneModel(@PathVariable long id) throws AirplaneModelWrongDataException {
         airplaneModelService.deleteAirplaneModel(id);
     }
 }
