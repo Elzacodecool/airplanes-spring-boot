@@ -1,5 +1,6 @@
 package com.codecool.spring.service;
 
+import com.codecool.spring.exception.AirplaneModelNotFoundException;
 import com.codecool.spring.model.AirplaneModel;
 import com.codecool.spring.model.Producer;
 import com.codecool.spring.repository.AirplaneModelRepository;
@@ -23,14 +24,21 @@ public class AirplaneModelService {
     @Autowired
     private ProducerRepository producerRepository;
 
-    public List<AirplaneModel> getAllAirplaneModels() {
+    public List<AirplaneModel> getAllAirplaneModels() throws AirplaneModelNotFoundException {
         LOGGER.info("Get all airplane models");
-        return airplaneModelRepository.findAllByIsArchivedIsFalse();
+        List<AirplaneModel> output = airplaneModelRepository.findAllByIsArchivedIsFalse();
+        if (!output.isEmpty()) return output;
+        else {
+            LOGGER.error("Error on /airplanes path");
+            throw new AirplaneModelNotFoundException("No airplane models in database");
+        }
     }
 
-    public List<AirplaneModel> getAllAirplaneModels(long producerId) {
+    public List<AirplaneModel> getAllAirplaneModels(long producerId) throws AirplaneModelNotFoundException {
         LOGGER.info("Get all airplane models by producer id: " + producerId);
-        return airplaneModelRepository.findAllByProducerIdAndIsArchivedIsFalse(producerId);
+        List<AirplaneModel> output = airplaneModelRepository.findAllByProducerIdAndIsArchivedIsFalse(producerId);
+        if (!output.isEmpty()) return output;
+        else throw new AirplaneModelNotFoundException("No airplane models for producer with id: " + producerId);
     }
 
     public AirplaneModel getAirplaneModel(long id) {
