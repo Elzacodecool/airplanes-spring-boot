@@ -101,39 +101,43 @@ public class AirplaneModelService {
     }
 
     public void updateAirplaneModel(long producerId, long id, AirplaneModel updateAirplaneModel)
-            throws AirplaneModelWrongDataException {
+            throws AirplaneModelWrongDataException, JDBCConnectionException {
 
-        Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(producerId);
+        try {
+            Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(producerId);
 
-        if (producer == null) {
-            throw new AirplaneModelWrongDataException("Failed to update airplane model. " +
-                    "Wrong producer id: " + producerId);
+            if (producer == null) throw new AirplaneModelWrongDataException("Failed to update airplane model. " +
+                        "Wrong producer id: " + producerId);
+
+            AirplaneModel airplaneModel = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
+            airplaneModel.setModelName(updateAirplaneModel.getModelName());
+            airplaneModel.setMaxSeat(updateAirplaneModel.getMaxSeat());
+            airplaneModel.setProducer(producer);
+            airplaneModelRepository.save(airplaneModel);
         }
-
-        AirplaneModel airplaneModel = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
-        
-        airplaneModel.setModelName(updateAirplaneModel.getModelName());
-        airplaneModel.setMaxSeat(updateAirplaneModel.getMaxSeat());
-        airplaneModel.setProducer(producer);
-        
-        airplaneModelRepository.save(airplaneModel);
+        catch (DataAccessResourceFailureException e) {
+            throw new JDBCConnectionException("Connection to database failed", new SQLException());
+        }
     }
 
-    public void updateAirplaneModel(long id, String airplaneModel) throws AirplaneModelWrongDataException {
+    public void updateAirplaneModel(long id, String airplaneModel) throws AirplaneModelWrongDataException,
+            JDBCConnectionException {
+
         try {
             JSONObject jsonObject = new JSONObject(airplaneModel);
             Producer producer =  producerRepository.findByIdAndIsArchivedIsFalse(jsonObject.getLong("producer"));
 
             AirplaneModel updatedModel = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
-
             updatedModel.setModelName(jsonObject.getString("modelName"));
             updatedModel.setMaxSeat(jsonObject.getInt("maxSeat"));
             updatedModel.setProducer(producer);
-
             airplaneModelRepository.save(updatedModel);
         }
         catch (JSONException e) {
             throw new AirplaneModelWrongDataException("Failed to update airplane model with id: " + id);
+        }
+        catch (DataAccessResourceFailureException e) {
+            throw new JDBCConnectionException("Connection to database failed", new SQLException());
         }
     }
 
