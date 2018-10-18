@@ -1,6 +1,5 @@
 package com.codecool.spring.interceptor;
 
-import com.codecool.spring.service.ProducerService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -13,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
 @Component
-public class ProducerServiceInterceptor implements HandlerInterceptor {
-    private static final Logger LOGGER = LogManager.getLogger(ProducerService.class.getName());
+public class ServiceInterceptor implements HandlerInterceptor {
+    private static final Logger LOGGER = LogManager.getLogger(ServiceInterceptor.class.getName());
 
     @Override
     public boolean preHandle(
@@ -48,7 +47,7 @@ public class ProducerServiceInterceptor implements HandlerInterceptor {
 
         if (response.getStatus() >= 400) {
             LOGGER.info("[afterCompletion] Can't " + method.getName()
-                    + ", producer not found [error status: " + response.getStatus() + "]");
+                    + ", object not found [error status: " + response.getStatus() + "]");
         } else {
             LOGGER.info("[afterCompletion] " + method.getName() + " is completed");
         }

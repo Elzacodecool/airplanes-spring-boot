@@ -6,12 +6,12 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Component
-public class ProducerServiceInterceptorAppConfig extends WebMvcConfigurerAdapter {
+public class ServiceInterceptorAppConfig extends WebMvcConfigurerAdapter {
     @Autowired
-    ProducerServiceInterceptor producerServiceInterceptor;
+    ServiceInterceptor serviceInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(producerServiceInterceptor);
+        registry.addInterceptor(serviceInterceptor);
     }
 }
