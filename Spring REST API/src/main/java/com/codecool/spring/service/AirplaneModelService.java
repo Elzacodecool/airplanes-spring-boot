@@ -141,12 +141,17 @@ public class AirplaneModelService {
         }
     }
 
-    public void deleteAirplaneModel(long id) throws AirplaneModelWrongDataException {
-    	AirplaneModel airplaneModel = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
-    	if (airplaneModel == null) {
-            throw new AirplaneModelWrongDataException("Failed to delete airplane model with id: " + id);
+    public void deleteAirplaneModel(long id) throws AirplaneModelWrongDataException,
+            JDBCConnectionException {
+
+        try {
+            AirplaneModel airplaneModel = airplaneModelRepository.findByIdAndIsArchivedIsFalse(id);
+            if (airplaneModel == null) throw new AirplaneModelWrongDataException("Failed to delete airplane model with id: " + id);
+            airplaneModel.setArchived(true);
+            airplaneModelRepository.save(airplaneModel);
         }
-    	airplaneModel.setArchived(true);
-    	airplaneModelRepository.save(airplaneModel);
+        catch (DataAccessResourceFailureException e) {
+            throw new JDBCConnectionException("Connection to database failed", new SQLException());
+        }
     }
 }
