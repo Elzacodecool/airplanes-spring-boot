@@ -72,14 +72,21 @@ public class ProducerService {
         }
 	}
 
-	public void update(long id, Producer producerDetails) {
-		Producer currentProducer = producerRepository.findByIdAndIsArchivedIsFalse(id);
-		if (currentProducer == null) {
-		    throw new ProducerNotFoundException(id);
+	public void update(long id, Producer producerDetails) throws ProducerNotFoundException,
+            JDBCConnectionException {
+
+	    try {
+            Producer currentProducer = producerRepository.findByIdAndIsArchivedIsFalse(id);
+            if (currentProducer == null) {
+                throw new ProducerNotFoundException(id);
+            }
+            currentProducer.setName(producerDetails.getName());
+            currentProducer.setOwner(producerDetails.getOwner());
+            producerRepository.save(currentProducer);
         }
-		currentProducer.setName(producerDetails.getName());
-		currentProducer.setOwner(producerDetails.getOwner());
-		producerRepository.save(currentProducer);
+        catch (DataAccessResourceFailureException e) {
+            throw new JDBCConnectionException("Connection to database failed", new SQLException());
+        }
 	}
 	
 	public void deleteProducer(long id) {
