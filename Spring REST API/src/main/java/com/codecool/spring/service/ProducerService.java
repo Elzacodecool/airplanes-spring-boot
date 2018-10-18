@@ -1,8 +1,10 @@
 package com.codecool.spring.service;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.codecool.spring.exception.ProducerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,9 @@ public class ProducerService {
 	
 	public Producer getProducer(long id) {
 		Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(id);
+		if (producer == null) {
+			throw new ProducerNotFoundException();
+		}
 		List<AirplaneModel> models = new ArrayList<>();
 		for(AirplaneModel airplaneModel: producer.getModels()) {
 			if(!airplaneModel.isArchived()) {
@@ -49,6 +54,9 @@ public class ProducerService {
 
 	public void update(long id, Producer producerDetails) {
 		Producer currnetProducer = producerRepository.findByIdAndIsArchivedIsFalse(id);
+		if (currnetProducer == null) {
+		    throw new ProducerNotFoundException();
+        }
 		currnetProducer.setName(producerDetails.getName());
 		currnetProducer.setOwner(producerDetails.getOwner());
 		producerRepository.save(currnetProducer);
@@ -56,6 +64,9 @@ public class ProducerService {
 	
 	public void deleteProducer(long id) {
 		Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(id);
+		if (producer == null) {
+		    throw new ProducerNotFoundException();
+        }
 		producer.setArchived(true);
 		for(AirplaneModel airplaneModel : producer.getModels()) {
 			airplaneModel.setArchived(true);
