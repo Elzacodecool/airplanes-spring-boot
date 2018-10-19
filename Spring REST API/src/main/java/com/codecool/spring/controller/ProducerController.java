@@ -3,6 +3,7 @@ package com.codecool.spring.controller;
 import java.util.List;
 
 import com.codecool.spring.exception.ProducerNotFoundException;
+import com.codecool.spring.exception.ProducerWrongDataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,7 +24,7 @@ public class ProducerController {
 	private ProducerService producerService;
 
 	@GetMapping("/producers")
-	public List<Producer> getAllProducers() throws ProducerNotFoundException, JDBCConnectionException {
+	public List<Producer> getAllProducers() throws ProducerWrongDataException, JDBCConnectionException {
 		return producerService.getAllProducers();
 	}
 	
@@ -34,8 +35,8 @@ public class ProducerController {
 	}
 
 	@PostMapping("/producers")
-	public void addProducer(@RequestBody Producer producer) throws ProducerNotFoundException,
-			JDBCConnectionException {
+	public void addProducer(@RequestBody Producer producer) throws JDBCConnectionException,
+			ProducerWrongDataException {
 		producerService.add(producer);
 	}
 	

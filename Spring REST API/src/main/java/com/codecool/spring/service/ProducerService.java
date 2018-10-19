@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.codecool.spring.exception.ProducerNotFoundException;
+import com.codecool.spring.exception.ProducerWrongDataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessResourceFailureException;
@@ -63,9 +64,13 @@ public class ProducerService {
         }
 	}
 	
-	public void add(Producer producer) throws JDBCConnectionException {
+	public void add(Producer producer) throws JDBCConnectionException, ProducerWrongDataException {
 	    try {
-            producerRepository.save(producer);
+	        if (producer.getName() != null && producer.getOwner() != null) {
+                producerRepository.save(producer);
+            } else {
+	            throw new ProducerWrongDataException();
+            }
         }
         catch (DataAccessResourceFailureException e) {
             throw new JDBCConnectionException("Connection to database failed", new SQLException());
