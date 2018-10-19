@@ -22,34 +22,9 @@ public class ProducerService {
 	@Autowired
 	private ProducerRepository producerRepository;
 	
-	public List<Producer> getAllProducers() throws JDBCConnectionException {
-	    try {
-            List<Producer> producers = producerRepository.findAllByIsArchivedIsFalse();
-            for (Producer producer: producers) {
-                List<AirplaneModel> models = new ArrayList<>();
-                for(AirplaneModel airplaneModel: producer.getModels()) {
-                    if(!airplaneModel.isArchived()) {
-                        models.add(airplaneModel);
-                    }
-                }
-                producer.setModels(models);
-            }
-
-            return producers;
-        }
-        catch (DataAccessResourceFailureException e) {
-            throw new JDBCConnectionException("Connection to database failed", new SQLException());
-        }
-	}
-	
-	public Producer getProducer(long id) throws ProducerNotFoundException,
-            JDBCConnectionException {
-
-	    try {
-            Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(id);
-            if (producer == null) {
-                throw new ProducerNotFoundException(id);
-            }
+	public List<Producer> getAllProducers() {
+        List<Producer> producers = producerRepository.findAllByIsArchivedIsFalse();
+        for (Producer producer: producers) {
             List<AirplaneModel> models = new ArrayList<>();
             for(AirplaneModel airplaneModel: producer.getModels()) {
                 if(!airplaneModel.isArchived()) {
@@ -57,59 +32,54 @@ public class ProducerService {
                 }
             }
             producer.setModels(models);
-            return producer;
         }
-        catch (DataAccessResourceFailureException e) {
-            throw new JDBCConnectionException("Connection to database failed", new SQLException());
-        }
+
+        return producers;
 	}
 	
-	public void add(Producer producer) throws JDBCConnectionException, ProducerWrongDataException {
-	    try {
-	        if (producer.getName() != null && producer.getOwner() != null) {
-                producerRepository.save(producer);
-            } else {
-	            throw new ProducerWrongDataException();
+	public Producer getProducer(long id) {
+        Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(id);
+        if (producer == null) {
+            throw new ProducerNotFoundException(id);
+        }
+        List<AirplaneModel> models = new ArrayList<>();
+        for(AirplaneModel airplaneModel: producer.getModels()) {
+            if(!airplaneModel.isArchived()) {
+                models.add(airplaneModel);
             }
         }
-        catch (DataAccessResourceFailureException e) {
-            throw new JDBCConnectionException("Connection to database failed", new SQLException());
-        }
-	}
-
-	public void update(long id, Producer producerDetails) throws ProducerNotFoundException,
-            JDBCConnectionException {
-
-	    try {
-            Producer currentProducer = producerRepository.findByIdAndIsArchivedIsFalse(id);
-            if (currentProducer == null) {
-                throw new ProducerNotFoundException(id);
-            }
-            currentProducer.setName(producerDetails.getName());
-            currentProducer.setOwner(producerDetails.getOwner());
-            producerRepository.save(currentProducer);
-        }
-        catch (DataAccessResourceFailureException e) {
-            throw new JDBCConnectionException("Connection to database failed", new SQLException());
-        }
+        producer.setModels(models);
+        return producer;
 	}
 	
-	public void deleteProducer(long id) throws ProducerNotFoundException, JDBCConnectionException {
-	    try {
-            Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(id);
-            if (producer == null) {
-                throw new ProducerNotFoundException(id);
-            }
-            producer.setArchived(true);
-            for(AirplaneModel airplaneModel : producer.getModels()) {
-                airplaneModel.setArchived(true);
-                producer.getModels().remove(airplaneModel);
-            }
+	public void add(Producer producer) {
+        if (producer.getName() != null && producer.getOwner() != null) {
             producerRepository.save(producer);
-        }
-        catch (DataAccessResourceFailureException e) {
-            throw new JDBCConnectionException("Connection to database failed", new SQLException());
+        } else {
+            throw new ProducerWrongDataException();
         }
 	}
+
+	public void update(long id, Producer producerDetails) {
+        Producer currentProducer = producerRepository.findByIdAndIsArchivedIsFalse(id);
+        if (currentProducer == null) {
+            throw new ProducerNotFoundException(id);
+        }
+        currentProducer.setName(producerDetails.getName());
+        currentProducer.setOwner(producerDetails.getOwner());
+        producerRepository.save(currentProducer);
+	}
 	
+	public void deleteProducer(long id) {
+        Producer producer = producerRepository.findByIdAndIsArchivedIsFalse(id);
+        if (producer == null) {
+            throw new ProducerNotFoundException(id);
+        }
+        producer.setArchived(true);
+        for(AirplaneModel airplaneModel : producer.getModels()) {
+            airplaneModel.setArchived(true);
+            producer.getModels().remove(airplaneModel);
+        }
+        producerRepository.save(producer);
+	}
 }

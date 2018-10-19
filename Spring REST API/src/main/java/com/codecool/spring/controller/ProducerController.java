@@ -24,32 +24,27 @@ public class ProducerController {
 	private ProducerService producerService;
 
 	@GetMapping("/producers")
-	public List<Producer> getAllProducers() throws ProducerWrongDataException, JDBCConnectionException {
+	public List<Producer> getAllProducers() {
 		return producerService.getAllProducers();
 	}
 	
 	@GetMapping("/producers/{id}")
-	public Producer getProducer(@PathVariable long id) throws ProducerNotFoundException,
-			JDBCConnectionException {
+	public Producer getProducer(@PathVariable long id) {
 		return producerService.getProducer(id);
 	}
 
 	@PostMapping("/producers")
-	public void addProducer(@RequestBody Producer producer) throws JDBCConnectionException,
-			ProducerWrongDataException {
+	public void addProducer(@RequestBody Producer producer) {
 		producerService.add(producer);
 	}
 	
 	@PutMapping("/producers/{id}")
-	public void updateProducer(@RequestBody Producer producer, @PathVariable long id)
-			throws ProducerNotFoundException, JDBCConnectionException {
+	public void updateProducer(@RequestBody Producer producer, @PathVariable long id) {
 		producerService.update(id, producer);
 	}
 	
 	@DeleteMapping("/producers/{id}")
-	public void deleteProducer(@PathVariable long id) throws ProducerNotFoundException,
-			JDBCConnectionException {
+	public void deleteProducer(@PathVariable long id) {
 		producerService.deleteProducer(id);
 	}
-	
 }
