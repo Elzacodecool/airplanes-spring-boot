@@ -4,7 +4,7 @@ import com.codecool.spring.exception.AirplaneModelNotFoundException;
 import com.codecool.spring.exception.AirplaneModelWrongDataException;
 import com.codecool.spring.exception.ProducerNotFoundException;
 import com.codecool.spring.exception.ProducerWrongDataException;
-import org.hibernate.exception.JDBCConnectionException;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,8 @@ import java.sql.Timestamp;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({AirplaneModelNotFoundException.class, AirplaneModelWrongDataException.class,
-            ProducerNotFoundException.class, ProducerWrongDataException.class, JDBCConnectionException.class})
+            ProducerNotFoundException.class, ProducerWrongDataException.class,
+            DataAccessResourceFailureException.class})
     public final ResponseEntity<ErrorMessage> handleExceptions(Exception ex, HttpServletRequest request) {
 
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -27,7 +28,7 @@ public class GlobalExceptionHandler {
         if (ex instanceof ProducerNotFoundException) status = HttpStatus.NOT_FOUND;
         if (ex instanceof AirplaneModelWrongDataException) status = HttpStatus.BAD_REQUEST;
         if (ex instanceof ProducerWrongDataException) status = HttpStatus.BAD_REQUEST;
-        if (ex instanceof JDBCConnectionException) status = HttpStatus.INTERNAL_SERVER_ERROR;
+        if (ex instanceof DataAccessResourceFailureException) status = HttpStatus.INTERNAL_SERVER_ERROR;
 
         HttpHeaders headers = new HttpHeaders();
         ErrorMessage errorMessageResponse = new ErrorMessage(new Timestamp(System.currentTimeMillis()), status.toString(),
