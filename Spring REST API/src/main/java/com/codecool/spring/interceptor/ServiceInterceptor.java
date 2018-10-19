@@ -19,8 +19,12 @@ public class ServiceInterceptor implements HandlerInterceptor {
 
     private static final Logger LOGGER = LogManager.getLogger(ServiceInterceptor.class.getName());
 
+    private final EmailService emailService;
+
     @Autowired
-    private EmailService emailService;
+    public ServiceInterceptor(EmailService emailService) {
+        this.emailService = emailService;
+    }
 
     @Override
     public boolean preHandle(

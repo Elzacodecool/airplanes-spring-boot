@@ -9,6 +9,7 @@ import com.codecool.spring.exception.ProducerNotFoundException;
 import com.codecool.spring.exception.ProducerWrongDataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,14 @@ import com.codecool.spring.repository.ProducerRepository;
 @Service
 public class ProducerService {
 
-	@Autowired
-	private ProducerRepository producerRepository;
-	
-	public List<Producer> getAllProducers() {
+	private final ProducerRepository producerRepository;
+
+    @Autowired
+    public ProducerService(ProducerRepository producerRepository) {
+        this.producerRepository = producerRepository;
+    }
+
+    public List<Producer> getAllProducers() {
         List<Producer> producers = producerRepository.findAllByIsArchivedIsFalse();
         for (Producer producer: producers) {
             List<AirplaneModel> models = new ArrayList<>();

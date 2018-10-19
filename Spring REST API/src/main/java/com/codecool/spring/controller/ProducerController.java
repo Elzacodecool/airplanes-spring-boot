@@ -20,10 +20,14 @@ import com.codecool.spring.service.ProducerService;
 @RestController
 public class ProducerController {
 	
-	@Autowired
-	private ProducerService producerService;
+	private final ProducerService producerService;
 
-	@GetMapping("/producers")
+    @Autowired
+    public ProducerController(ProducerService producerService) {
+        this.producerService = producerService;
+    }
+
+    @GetMapping("/producers")
 	public List<Producer> getAllProducers() {
 		return producerService.getAllProducers();
 	}

@@ -16,11 +16,15 @@ import java.util.List;
 @Service
 public class AirplaneModelService {
 
-    @Autowired
-    private AirplaneModelRepository airplaneModelRepository;
+    private final AirplaneModelRepository airplaneModelRepository;
+
+    private final ProducerRepository producerRepository;
 
     @Autowired
-    private ProducerRepository producerRepository;
+    public AirplaneModelService(AirplaneModelRepository airplaneModelRepository, ProducerRepository producerRepository) {
+        this.airplaneModelRepository = airplaneModelRepository;
+        this.producerRepository = producerRepository;
+    }
 
     public List<AirplaneModel> getAllAirplaneModels() {
         List<AirplaneModel> output = airplaneModelRepository.findAllByIsArchivedIsFalse();

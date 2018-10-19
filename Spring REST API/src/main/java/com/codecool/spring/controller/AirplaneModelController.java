@@ -13,8 +13,12 @@ import java.util.List;
 @RestController
 public class AirplaneModelController {
 
+    private final AirplaneModelService airplaneModelService;
+
     @Autowired
-    private AirplaneModelService airplaneModelService;
+    public AirplaneModelController(AirplaneModelService airplaneModelService) {
+        this.airplaneModelService = airplaneModelService;
+    }
 
     @GetMapping("/producers/{id}/airplanes")
     public List<AirplaneModel> getAllAirplaneModels(@PathVariable long id) {
