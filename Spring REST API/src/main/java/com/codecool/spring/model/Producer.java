@@ -1,5 +1,7 @@
 package com.codecool.spring.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,7 @@ public class Producer {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy="producer")
 	private List<AirplaneModel> models = new ArrayList<>();
 	private String owner;
+	@JsonIgnore
 	private boolean isArchived;
 	
 	public Producer() {
