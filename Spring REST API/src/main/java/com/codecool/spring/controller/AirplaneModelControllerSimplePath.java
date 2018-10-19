@@ -17,32 +17,27 @@ public class AirplaneModelControllerSimplePath {
     private AirplaneModelService airplaneModelService;
 
     @GetMapping("/airplanes")
-    public List<AirplaneModel> getAllAirplaneModels() throws AirplaneModelNotFoundException,
-            JDBCConnectionException {
+    public List<AirplaneModel> getAllAirplaneModels() {
         return airplaneModelService.getAllAirplaneModels();
     }
 
     @GetMapping("/airplanes/{id}")
-    public AirplaneModel getAirplaneModel(@PathVariable long id) throws AirplaneModelNotFoundException,
-            JDBCConnectionException {
+    public AirplaneModel getAirplaneModel(@PathVariable long id) {
         return airplaneModelService.getAirplaneModel(id);
     }
 
     @PostMapping("/airplanes")
-    public void addAirplaneModel(@RequestBody String airplaneModel) throws AirplaneModelWrongDataException,
-            JDBCConnectionException {
+    public void addAirplaneModel(@RequestBody String airplaneModel) {
         airplaneModelService.addAirplaneModel(airplaneModel);
     }
 
     @PutMapping("/airplanes/{id}")
-    public void updateAirplaneModel(@PathVariable long id, @RequestBody String airplaneModel)
-            throws AirplaneModelWrongDataException, JDBCConnectionException {
+    public void updateAirplaneModel(@PathVariable long id, @RequestBody String airplaneModel) {
         airplaneModelService.updateAirplaneModel(id, airplaneModel);
     }
 
     @DeleteMapping("/airplanes/{id}")
-    public void deleteAirplaneModel(@PathVariable long id) throws AirplaneModelWrongDataException,
-            JDBCConnectionException {
+    public void deleteAirplaneModel(@PathVariable long id) {
         airplaneModelService.deleteAirplaneModel(id);
     }
 }
