@@ -57,6 +57,7 @@ public class Producer {
 		this.owner = owner;
 	}
 
+    @JsonIgnore
 	public boolean isArchived() {
 		return isArchived;
 	}

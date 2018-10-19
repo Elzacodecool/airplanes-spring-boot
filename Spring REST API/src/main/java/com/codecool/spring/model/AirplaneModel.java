@@ -60,6 +60,7 @@ public class AirplaneModel {
 		this.maxSeat = maxSeat;
 	}
 
+	@JsonIgnore
 	public boolean isArchived() {
 		return isArchived;
 	}
